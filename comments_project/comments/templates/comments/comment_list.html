@@ -3,6 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Comments</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th a {
+            text-decoration: none;
+            color: black;
+        }
+        th a.asc:after {
+            content: " 🔼";
+        }
+        th a.desc:after {
+            content: " 🔽";
+        }
+    </style>
 </head>
 <body>
     <h1>Comments</h1>
@@ -10,7 +33,7 @@
     <a href="?show_form=true">Comment</a>
 
     {% if form %}
-    <form method="post" action="{% url 'add_comment' %}">
+    <form method="post" action="{% url 'add_comment' %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Add Comment</button>
@@ -50,12 +73,24 @@
             <tr>
                 <td colspan="3">
                     <p>{{ comment.text }}</p>
+                    {% if comment.image %}
+                        <img src="{{ comment.image.url }}" alt="Image" style="max-width: 320px; max-height: 240px;">
+                    {% endif %}
+                    {% if comment.file %}
+                        <p><a href="{{ comment.file.url }}">{{ comment.file.name }}</a></p>
+                    {% endif %}
                     <ul>
                         {% for reply in comment.replies.all %}
                             <li style="margin-left: 20px;">
                                 <p><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
                                 <p>{{ reply.text }}</p>
                                 <p><small>{{ reply.created_at }}</small></p>
+                                {% if reply.image %}
+                                    <img src="{{ reply.image.url }}" alt="Image" style="max-width: 320px; max-height: 240px;">
+                                {% endif %}
+                                {% if reply.file %}
+                                    <p><a href="{{ reply.file.url }}">{{ reply.file.name }}</a></p>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 django = "^5.0.6"
+pillow = "^10.3.0"
+captcha = "^0.5.0"
+django-simple-captcha = "^0.6.0"
 
 
 [build-system]

@@ -14,7 +14,7 @@ def comment_list(request):
         sort_by = f'-{sort_by}'
 
     comments = Comment.objects.filter(parent__isnull=True).order_by(sort_by)
-    paginator = Paginator(comments, 25)  # 25 комментариев на страницу
+    paginator = Paginator(comments, 25)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -25,7 +25,7 @@ def comment_list(request):
 
 def add_comment(request):
     if request.method == 'POST':
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('comment_list')
