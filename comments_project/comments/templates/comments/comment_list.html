@@ -4,26 +4,36 @@
     <meta charset="UTF-8">
     <title>Comments</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+            font-family: Arial, sans-serif;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
+        .comment-container {
+            border: 1px solid #ccc;
             padding: 10px;
-            text-align: left;
+            margin-bottom: 10px;
         }
-        th a {
-            text-decoration: none;
-            color: black;
+        .comment-image {
+            max-width: 320px;
+            max-height: 240px;
         }
-        th a.asc:after {
-            content: " 🔼";
+        .comment-text {
+            white-space: pre-wrap;
         }
-        th a.desc:after {
-            content: " 🔽";
+        .errorlist {
+            color: red;
+            list-style-type: none;
+        }
+        .preview-container {
+            border: 1px dashed #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .toolbar {
+            margin-bottom: 10px;
+        }
+        .toolbar button {
+            padding: 5px;
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -36,86 +46,112 @@
     <form method="post" action="{% url 'add_comment' %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        <div class="toolbar">
+            <button type="button" onclick="insertTag('<i>', '</i>')">[i]</button>
+            <button type="button" onclick="insertTag('<strong>', '</strong>')">[strong]</button>
+            <button type="button" onclick="insertTag('<code>', '</code>')">[code]</button>
+            <button type="button" onclick="insertLink()">[a]</button>
+        </div>
+        <button type="button" onclick="previewComment()">Preview</button>
         <button type="submit">Add Comment</button>
+        <div class="preview-container" id="preview-container"></div>
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </form>
     {% endif %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    <a href="?sort_by=username&order={% if request.GET.sort_by == 'username' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}"
-                       class="{% if request.GET.sort_by == 'username' %}{{ request.GET.order }}{% endif %}">
-                        User Name
-                    </a>
-                </th>
-                <th>
-                    <a href="?sort_by=email&order={% if request.GET.sort_by == 'email' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}"
-                       class="{% if request.GET.sort_by == 'email' %}{{ request.GET.order }}{% endif %}">
-                        E-mail
-                    </a>
-                </th>
-                <th>
-                    <a href="?sort_by=created_at&order={% if request.GET.sort_by == 'created_at' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}"
-                       class="{% if request.GET.sort_by == 'created_at' %}{{ request.GET.order }}{% endif %}">
-                        Date Added
-                    </a>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for comment in page_obj.object_list %}
-            <tr>
-                <td>{{ comment.username }}</td>
-                <td>{{ comment.email }}</td>
-                <td>{{ comment.created_at }}</td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <p>{{ comment.text }}</p>
-                    {% if comment.image %}
-                        <img src="{{ comment.image.url }}" alt="Image" style="max-width: 320px; max-height: 240px;">
-                    {% endif %}
-                    {% if comment.file %}
-                        <p><a href="{{ comment.file.url }}">{{ comment.file.name }}</a></p>
-                    {% endif %}
-                    <ul>
-                        {% for reply in comment.replies.all %}
-                            <li style="margin-left: 20px;">
-                                <p><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
-                                <p>{{ reply.text }}</p>
-                                <p><small>{{ reply.created_at }}</small></p>
-                                {% if reply.image %}
-                                    <img src="{{ reply.image.url }}" alt="Image" style="max-width: 320px; max-height: 240px;">
-                                {% endif %}
-                                {% if reply.file %}
-                                    <p><a href="{{ reply.file.url }}">{{ reply.file.name }}</a></p>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div>
+        {% for comment in page_obj.object_list %}
+        <div class="comment-container">
+            <p><strong>{{ comment.username }}</strong> ({{ comment.email }})</p>
+            <p class="comment-text">{{ comment.text|safe }}</p>
+            {% if comment.image %}
+                <img src="{{ comment.image.url }}" alt="image" class="comment-image">
+            {% endif %}
+            {% if comment.text_file %}
+                <a href="{{ comment.text_file.url }}" download>Download text file</a>
+            {% endif %}
+            <div>
+                {% for reply in comment.replies.all %}
+                    <div style="margin-left: 20px;">
+                        {% if reply.image %}
+                            <img src="{{ reply.image.url }}" alt="image" class="comment-image">
+                        {% endif %}
+                        <p><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
+                        <p class="comment-text">{{ reply.text|safe }}</p>
+                        {% if reply.text_file %}
+                            <a href="{{ reply.text_file.url }}" download>Download text file</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
     <div>
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
+        <span>Page: </span>
+        <span>
+            {% for page_num in page_obj.paginator.page_range %}
+                {% if page_num == page_obj.number %}
+                    <strong>{{ page_num }}</strong>
+                {% else %}
+                    <a href="?page={{ page_num }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}">{{ page_num }}</a>
+                {% endif %}
+            {% endfor %}
         </span>
     </div>
+
+    <script>
+        function insertTag(startTag, endTag) {
+            var textArea = document.getElementById('id_text');
+            var start = textArea.selectionStart;
+            var end = textArea.selectionEnd;
+            var text = textArea.value;
+            var before = text.substring(0, start);
+            var after  = text.substring(end, text.length);
+            textArea.value = before + startTag + text.substring(start, end) + endTag + after;
+            textArea.selectionStart = start + startTag.length;
+            textArea.selectionEnd = end + startTag.length;
+            textArea.focus();
+        }
+
+        function insertLink() {
+            var url = prompt("Enter the URL");
+            if (url) {
+                insertTag('<a href="' + url + '">', '</a>');
+            }
+        }
+
+        function previewComment() {
+            var text = document.getElementById('id_text').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "preview_comment" %}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var previewContainer = document.getElementById('preview-container');
+                    if (response.preview) {
+                        previewContainer.innerHTML = response.preview;
+                    } else {
+                        previewContainer.innerHTML = '<p style="color: red;">' + response.error.text[0] + '</p>';
+                    }
+                }
+            };
+            xhr.send('text=' + encodeURIComponent(text));
+        }
+    </script>
 </body>
 </html>
