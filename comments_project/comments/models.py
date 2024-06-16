@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-from PIL import Image
 from django.core.exceptions import ValidationError
 
 ALLOWED_HTML_TAGS = ['a', 'code', 'i', 'strong']
@@ -22,4 +20,4 @@ class Comment(models.Model):
     text_file = models.FileField(upload_to='text_files/', null=True, blank=True, validators=[validate_file_size])
 
     def __str__(self):
-        return self.text[:50]
+        return self.email

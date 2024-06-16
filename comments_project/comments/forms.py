@@ -9,3 +9,4 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['username', 'email', 'text', 'image', 'text_file', 'parent']
+

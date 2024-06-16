@@ -31,29 +31,76 @@
         .toolbar {
             margin-bottom: 10px;
         }
-        .toolbar button {
-            padding: 5px;
-            margin-right: 5px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th a {
+            text-decoration: none;
+            color: black;
+        }
+        th a.asc:after {
+            content: " 🔼";
+        }
+        th a.desc:after {
+            content: " 🔽";
+        }
+        .comment-img {
+            max-width: 320px;
+            max-height: 240px;
+        }
+        .main-button {
+        padding: 12px 29px; /* Отступы внутри кнопки */
+        font-size: 16px; /* Размер шрифта */
+        margin: 4px 2px; /* Отступы снаружи */
+        border-radius: 8px; /* Закругленные углы */
+        }
+        .d-button {
+        padding: 9px 25px; /* Отступы внутри кнопки */
+        font-size: 13px; /* Размер шрифта */
+        margin: 4px 2px; /* Отступы снаружи */
+        border-radius: 7px; /* Закругленные углы */
+        }
+        .button {
+        background-color: #4CAF50; /* Зеленый фон */
+        border: none; /* Без границ */
+        color: white; /* Белый текст */
+        text-align: center; /* Центрирование текста */
+        text-decoration: none; /* Без подчеркивания */
+        display: inline-block; /* Встраиваемый элемент */
+        cursor: pointer; /* Курсор в виде руки при наведении */
+        }
+        .tool-button {
+        background-color: grey; /* Зеленый фон */
+        color: black; /* Белый текст */
+        }
+
     </style>
 </head>
 <body>
     <h1>Comments</h1>
 
-    <a href="?show_form=true">Comment</a>
+    <a href="?show_form=true" class="main-button button">Comment</a>
 
     {% if form %}
     <form method="post" action="{% url 'add_comment' %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <div class="toolbar">
-            <button type="button" onclick="insertTag('<i>', '</i>')">[i]</button>
-            <button type="button" onclick="insertTag('<strong>', '</strong>')">[strong]</button>
-            <button type="button" onclick="insertTag('<code>', '</code>')">[code]</button>
-            <button type="button" onclick="insertLink()">[a]</button>
+            <button class="d-button button tool-button" type="button" onclick="insertTag('<i>', '</i>')">[i]</button>
+            <button class="d-button button tool-button" type="button" onclick="insertTag('<strong>', '</strong>')">[strong]</button>
+            <button class="d-button button tool-button" type="button" onclick="insertTag('<code>', '</code>')">[code]</button>
+            <button class="d-button button tool-button" type="button" onclick="insertLink()">[a]</button>
         </div>
-        <button type="button" onclick="previewComment()">Preview</button>
-        <button type="submit">Add Comment</button>
+        <button class="d-button button" type="button" onclick="previewComment()">Preview</button>
+        <button class="d-button button" type="submit">Add Comment</button>
         <div class="preview-container" id="preview-container"></div>
         {% if form.errors %}
             <ul class="errorlist">
@@ -70,6 +117,31 @@
     </form>
     {% endif %}
 
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <a href="?sort_by=username&order={% if request.GET.sort_by == 'username' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}"
+                       class="{% if request.GET.sort_by == 'username' %}{{ request.GET.order }}{% endif %}">
+                        User Name
+                    </a>
+                </th>
+                <th>
+                    <a href="?sort_by=email&order={% if request.GET.sort_by == 'email' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}"
+                       class="{% if request.GET.sort_by == 'email' %}{{ request.GET.order }}{% endif %}">
+                        E-mail
+                    </a>
+                </th>
+                <th>
+                    <a href="?sort_by=created_at&order={% if request.GET.sort_by == 'created_at' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}"
+                       class="{% if request.GET.sort_by == 'created_at' %}{{ request.GET.order }}{% endif %}">
+                        Date Added
+                    </a>
+                </th>
+            </tr>
+        </thead>
+    </table>
+
     <div>
         {% for comment in page_obj.object_list %}
         <div class="comment-container">
@@ -83,12 +155,12 @@
             {% endif %}
             <div>
                 {% for reply in comment.replies.all %}
-                    <div style="margin-left: 20px;">
+                    <div style="margin-left: 40px;">
+                        <p><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
+                        <p class="comment-text">{{ reply.text|safe }}</p>
                         {% if reply.image %}
                             <img src="{{ reply.image.url }}" alt="image" class="comment-image">
                         {% endif %}
-                        <p><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
-                        <p class="comment-text">{{ reply.text|safe }}</p>
                         {% if reply.text_file %}
                             <a href="{{ reply.text_file.url }}" download>Download text file</a>
                         {% endif %}
@@ -112,46 +184,46 @@
         </span>
     </div>
 
-    <script>
-        function insertTag(startTag, endTag) {
-            var textArea = document.getElementById('id_text');
-            var start = textArea.selectionStart;
-            var end = textArea.selectionEnd;
-            var text = textArea.value;
-            var before = text.substring(0, start);
-            var after  = text.substring(end, text.length);
-            textArea.value = before + startTag + text.substring(start, end) + endTag + after;
-            textArea.selectionStart = start + startTag.length;
-            textArea.selectionEnd = end + startTag.length;
-            textArea.focus();
-        }
+<!--    <script>-->
+<!--        function insertTag(startTag, endTag) {-->
+<!--            var textArea = document.getElementById('id_text');-->
+<!--            var start = textArea.selectionStart;-->
+<!--            var end = textArea.selectionEnd;-->
+<!--            var text = textArea.value;-->
+<!--            var before = text.substring(0, start);-->
+<!--            var after  = text.substring(end, text.length);-->
+<!--            textArea.value = before + startTag + text.substring(start, end) + endTag + after;-->
+<!--            textArea.selectionStart = start + startTag.length;-->
+<!--            textArea.selectionEnd = end + startTag.length;-->
+<!--            textArea.focus();-->
+<!--        }-->
 
-        function insertLink() {
-            var url = prompt("Enter the URL");
-            if (url) {
-                insertTag('<a href="' + url + '">', '</a>');
-            }
-        }
+<!--        function insertLink() {-->
+<!--            var url = prompt("Enter the URL");-->
+<!--            if (url) {-->
+<!--                insertTag('<a href="' + url + '">', '</a>');-->
+<!--            }-->
+<!--        }-->
 
-        function previewComment() {
-            var text = document.getElementById('id_text').value;
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '{% url "preview_comment" %}', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var previewContainer = document.getElementById('preview-container');
-                    if (response.preview) {
-                        previewContainer.innerHTML = response.preview;
-                    } else {
-                        previewContainer.innerHTML = '<p style="color: red;">' + response.error.text[0] + '</p>';
-                    }
-                }
-            };
-            xhr.send('text=' + encodeURIComponent(text));
-        }
-    </script>
+<!--        function previewComment() {-->
+<!--            var text = document.getElementById('id_text').value;-->
+<!--            var xhr = new XMLHttpRequest();-->
+<!--            xhr.open('POST', '{% url "preview_comment" %}', true);-->
+<!--            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
+<!--            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');-->
+<!--            xhr.onreadystatechange = function () {-->
+<!--                if (xhr.readyState === 4 && xhr.status === 200) {-->
+<!--                    var response = JSON.parse(xhr.responseText);-->
+<!--                    var previewContainer = document.getElementById('preview-container');-->
+<!--                    if (response.preview) {-->
+<!--                        previewContainer.innerHTML = response.preview;-->
+<!--                    } else {-->
+<!--                        previewContainer.innerHTML = '<p style="color: red;">' + response.error.text[0] + '</p>';-->
+<!--                    }-->
+<!--                }-->
+<!--            };-->
+<!--            xhr.send('text=' + encodeURIComponent(text));-->
+<!--        }-->
+<!--    </script>-->
 </body>
 </html>

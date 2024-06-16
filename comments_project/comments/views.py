@@ -24,6 +24,7 @@ def preview_comment(request):
         cleaned_text = cleaner.clean_html(text)
         return JsonResponse({'preview': cleaned_text})
 
+
 def comment_list(request):
     sort_by = request.GET.get('sort_by', 'created_at')
     order = request.GET.get('order', 'desc')
@@ -34,7 +35,7 @@ def comment_list(request):
         sort_by = f'-{sort_by}'
 
     comments = Comment.objects.filter(parent__isnull=True).order_by(sort_by)
-    paginator = Paginator(comments, 25)  # 25 комментариев на страницу
+    paginator = Paginator(comments, 25)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
