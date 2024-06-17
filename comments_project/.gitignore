@@ -1,6 +1,0 @@
-/images/
-/media/
-/text_files/
-
-.gitignore
-.db.sqlite3
