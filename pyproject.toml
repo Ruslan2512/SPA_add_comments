@@ -14,6 +14,9 @@ django-simple-captcha = "^0.6.0"
 lxml = "^5.2.2"
 lxml-html-clean = "^0.1.1"
 requests = "^2.32.3"
+selenium = "^4.21.0"
+webdriver-manager = "^4.0.1"
+psycopg2 = "^2.9.9"
 
 
 [build-system]

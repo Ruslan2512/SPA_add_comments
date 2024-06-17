@@ -1,11 +1,8 @@
 import queue
 
-from django.core.cache import cache
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
 from io import BytesIO
@@ -33,8 +30,7 @@ def preview_comment(request):
         return JsonResponse({'preview': cleaned_text})
 
 
-@cache_page(60 * 15)
-def comment_list(request):  # кешуємо список коментарів, щоб покращити продуктивність
+def comment_list(request):
     sort_by = request.GET.get('sort_by', 'created_at')
     order = request.GET.get('order', 'desc')
 
@@ -43,11 +39,7 @@ def comment_list(request):  # кешуємо список коментарів, 
     else:
         sort_by = f'-{sort_by}'
 
-    comments = cache.get('comments')
-    if not comments:
-        comments = Comment.objects.filter(parent__isnull=True).order_by(sort_by)
-        cache.set('comments', comments, 60 * 15)  # кешування на 15 хвилин
-
+    comments = Comment.objects.filter(parent__isnull=True).order_by(sort_by)
     paginator = Paginator(comments, 25)
 
     page_number = request.GET.get('page')
