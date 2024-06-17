@@ -37,6 +37,7 @@
         }
         table, th, td {
             border: 1px solid black;
+            background-color: #a2a8d3;
         }
         th, td {
             padding: 10px;
@@ -78,8 +79,8 @@
         cursor: pointer; /* Курсор в виде руки при наведении */
         }
         .tool-button {
-        background-color: grey; /* Зеленый фон */
-        color: black; /* Белый текст */
+        background-color: #a2a8d3;
+        color: black;
         }
 
     </style>
@@ -184,46 +185,46 @@
         </span>
     </div>
 
-<!--    <script>-->
-<!--        function insertTag(startTag, endTag) {-->
-<!--            var textArea = document.getElementById('id_text');-->
-<!--            var start = textArea.selectionStart;-->
-<!--            var end = textArea.selectionEnd;-->
-<!--            var text = textArea.value;-->
-<!--            var before = text.substring(0, start);-->
-<!--            var after  = text.substring(end, text.length);-->
-<!--            textArea.value = before + startTag + text.substring(start, end) + endTag + after;-->
-<!--            textArea.selectionStart = start + startTag.length;-->
-<!--            textArea.selectionEnd = end + startTag.length;-->
-<!--            textArea.focus();-->
-<!--        }-->
+    <script>
+        function insertTag(startTag, endTag) {
+            var textArea = document.getElementById('id_text');
+            var start = textArea.selectionStart;
+            var end = textArea.selectionEnd;
+            var text = textArea.value;
+            var before = text.substring(0, start);
+            var after  = text.substring(end, text.length);
+            textArea.value = before + startTag + text.substring(start, end) + endTag + after;
+            textArea.selectionStart = start + startTag.length;
+            textArea.selectionEnd = end + startTag.length;
+            textArea.focus();
+        }
 
-<!--        function insertLink() {-->
-<!--            var url = prompt("Enter the URL");-->
-<!--            if (url) {-->
-<!--                insertTag('<a href="' + url + '">', '</a>');-->
-<!--            }-->
-<!--        }-->
+        function insertLink() {
+            var url = prompt("Enter the URL");
+            if (url) {
+                insertTag('<a href="' + url + '">', '</a>');
+            }
+        }
 
-<!--        function previewComment() {-->
-<!--            var text = document.getElementById('id_text').value;-->
-<!--            var xhr = new XMLHttpRequest();-->
-<!--            xhr.open('POST', '{% url "preview_comment" %}', true);-->
-<!--            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
-<!--            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');-->
-<!--            xhr.onreadystatechange = function () {-->
-<!--                if (xhr.readyState === 4 && xhr.status === 200) {-->
-<!--                    var response = JSON.parse(xhr.responseText);-->
-<!--                    var previewContainer = document.getElementById('preview-container');-->
-<!--                    if (response.preview) {-->
-<!--                        previewContainer.innerHTML = response.preview;-->
-<!--                    } else {-->
-<!--                        previewContainer.innerHTML = '<p style="color: red;">' + response.error.text[0] + '</p>';-->
-<!--                    }-->
-<!--                }-->
-<!--            };-->
-<!--            xhr.send('text=' + encodeURIComponent(text));-->
-<!--        }-->
-<!--    </script>-->
+        function previewComment() {
+            var text = document.getElementById('id_text').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "preview_comment" %}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var previewContainer = document.getElementById('preview-container');
+                    if (response.preview) {
+                        previewContainer.innerHTML = response.preview;
+                    } else {
+                        previewContainer.innerHTML = '<p style="color: red;">' + response.error.text[0] + '</p>';
+                    }
+                }
+            };
+            xhr.send('text=' + encodeURIComponent(text));
+        }
+    </script>
 </body>
 </html>
