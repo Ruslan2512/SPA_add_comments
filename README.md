@@ -36,6 +36,12 @@ This is a Django application that allows users to add comments with optional ima
     ```bash
     pip install -r requirements.txt
     ```
+   
+4. **Create Docker container**:
+   ```bash
+    docker-compose up --build
+    docker run -p 5432:5432 postgres
+    ```
 
 4. **Run migrations**:
     ```bash
