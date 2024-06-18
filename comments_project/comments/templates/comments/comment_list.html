@@ -82,7 +82,11 @@
         background-color: #a2a8d3;
         color: black;
         }
-
+        .user-name-line {
+        padding: 9px 25px;
+        background-color: #e6e2d3;
+        border: none;
+        }
     </style>
 </head>
 <body>
@@ -146,7 +150,7 @@
     <div>
         {% for comment in page_obj.object_list %}
         <div class="comment-container">
-            <p><strong>{{ comment.username }}</strong> ({{ comment.email }})</p>
+            <p class="user-name-line"><strong>{{ comment.username }}</strong> ({{ comment.email }})</p>
             <p class="comment-text">{{ comment.text|safe }}</p>
             {% if comment.image %}
                 <img src="{{ comment.image.url }}" alt="image" class="comment-image">
@@ -157,7 +161,7 @@
             <div>
                 {% for reply in comment.replies.all %}
                     <div style="margin-left: 40px;">
-                        <p><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
+                        <p class="user-name-line"><strong>{{ reply.username }}</strong> ({{ reply.email }})</p>
                         <p class="comment-text">{{ reply.text|safe }}</p>
                         {% if reply.image %}
                             <img src="{{ reply.image.url }}" alt="image" class="comment-image">
