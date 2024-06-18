@@ -17,19 +17,24 @@ This is a Django application that allows users to add comments with optional ima
 1. **Clone the repository**:
     ```bash
     git clone https://github.com/Ruslan2512/SPA_add_comments.git
+    cd SPA_add_comments
     cd comments_project
     ```
 
 2. **Create a virtual environment**:
     ```bash
     python -m venv myenv
-    source myenv/bin/activate   (On Windows: `myenv\Scripts\activate`)
+    source myenv/bin/activate
     ```
-   To Poetry:
+    On Windows:
     ```bash
-    pip install poetry (poetry environment install);
-    poetry new myproject (create you poetry venv);
-    poetry shell (activate poetry).
+    source myenv\Scripts\activate
+    ```
+   Create a virtual environment(for Poetry):
+    ```bash
+    pip install poetry
+    poetry new myproject
+    poetry shell
     ```
 
 3. **Install dependencies**:
@@ -43,23 +48,30 @@ This is a Django application that allows users to add comments with optional ima
     docker run -p 5432:5432 postgres
     ```
 
-4. **Run migrations**:
+5. **Run migrations**:
     ```bash
     python manage.py migrate
     ```
 
-5. **Create a superuser**:
+6. **Create a superuser**:
     ```bash
     python manage.py createsuperuser
     ```
 
-6. **Run the development server**:
+7. **Run the development server**:
     ```bash
     python manage.py runserver
     ```
 
-7. **Access the application**:
+8. **Access the application**:
     Open your browser and go to `http://127.0.0.1:8000`.
+
+## Running Tests
+
+To run the tests, use the following command:
+   ```bash
+   python manage.py test
+   ```
 
 ## Usage
 
@@ -84,9 +96,3 @@ This is a Django application that allows users to add comments with optional ima
  - Docker
  - Github
 
-## Running Tests
-
-To run the tests, use the following command:
-
-```bash
-python manage.py test
