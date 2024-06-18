@@ -9,7 +9,7 @@ This is a Django application that allows users to add comments with optional ima
 3. **CAPTCHA Validation**: CAPTCHA to ensure the user is human.
 4. **HTML Tags Support**: Users can use specific HTML tags in their comments.
 5. **Pagination**: Comments are paginated with 25 comments per page.
-6. **Sorting**: Comments can be sorted by user name, email, and date.
+6. **Sorting**: Comments can be sorted by user_name, email, and date.
 7. **XSS and SQL Injection Protection**: The application is protected against common web vulnerabilities.
 
 ## Installation
@@ -67,6 +67,16 @@ This is a Django application that allows users to add comments with optional ima
 2. **Sorting and Pagination**:
     - Comments can be sorted by user_name, email, and date.
     - Use the pagination controls to navigate through pages.
+
+## Used technologies:
+
+ - Python 3.10.11
+ - Django 5.0.6
+ - PostgreSQL
+ - HTML
+ - CSS
+ - Docker
+ - Github
 
 ## Running Tests
 
