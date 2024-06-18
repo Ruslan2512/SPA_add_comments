@@ -2,7 +2,7 @@
 name = "spa-add-comments"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <ruslansirenko25@gmail.com>"]
+authors = ["Ruslan2512 <ruslansirenko25@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

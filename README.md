@@ -93,6 +93,7 @@ To run the tests, use the following command:
  - PostgreSQL
  - HTML
  - CSS
+ - JavaScript
  - Docker
  - Github
 

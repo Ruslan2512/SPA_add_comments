@@ -14,8 +14,6 @@ from lxml.html.clean import Cleaner
 
 ALLOWED_HTML_TAGS = ['a', 'code', 'i', 'strong']
 
-comment_queue = queue.Queue()
-
 
 @csrf_exempt
 def preview_comment(request):
@@ -76,7 +74,6 @@ def add_comment(request):
             comment.save()
             return redirect('comment_list')
         else:
-            # Возвращаем форму с ошибками на страницу
             comments = Comment.objects.filter(parent__isnull=True).order_by('-created_at')
             paginator = Paginator(comments, 25)
             page_number = request.GET.get('page')

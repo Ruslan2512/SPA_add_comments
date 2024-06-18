@@ -58,25 +58,25 @@
             max-height: 240px;
         }
         .main-button {
-        padding: 12px 29px; /* Отступы внутри кнопки */
-        font-size: 16px; /* Размер шрифта */
-        margin: 4px 2px; /* Отступы снаружи */
-        border-radius: 8px; /* Закругленные углы */
+        padding: 12px 29px;
+        font-size: 16px;
+        margin: 4px 2px;
+        border-radius: 8px;
         }
         .d-button {
-        padding: 9px 25px; /* Отступы внутри кнопки */
-        font-size: 13px; /* Размер шрифта */
-        margin: 4px 2px; /* Отступы снаружи */
-        border-radius: 7px; /* Закругленные углы */
+        padding: 9px 25px;
+        font-size: 13px;
+        margin: 4px 2px;
+        border-radius: 7px;
         }
         .button {
-        background-color: #4CAF50; /* Зеленый фон */
-        border: none; /* Без границ */
-        color: white; /* Белый текст */
-        text-align: center; /* Центрирование текста */
-        text-decoration: none; /* Без подчеркивания */
-        display: inline-block; /* Встраиваемый элемент */
-        cursor: pointer; /* Курсор в виде руки при наведении */
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
         }
         .tool-button {
         background-color: #a2a8d3;
@@ -190,6 +190,7 @@
     </div>
 
     <script>
+<!--    Вставляє HTML-теги у вибраний текст у текстовій області-->
         function insertTag(startTag, endTag) {
             var textArea = document.getElementById('id_text');
             var start = textArea.selectionStart;
@@ -203,6 +204,7 @@
             textArea.focus();
         }
 
+<!--    Вставляє HTML-тег посилання-->
         function insertLink() {
             var url = prompt("Enter the URL");
             if (url) {
@@ -210,6 +212,10 @@
             }
         }
 
+<!--    Надсилає AJAX-запит для отримання попереднього перегляду коментаря:-->
+<!--    - Створює об'єкт XMLHttpRequest-->
+<!--    - Відправляє POST-запит на сервер з текстом коментаря-->
+<!--    - Оновлює контейнер попереднього перегляду відповіддю від сервера-->
         function previewComment() {
             var text = document.getElementById('id_text').value;
             var xhr = new XMLHttpRequest();
