@@ -45,7 +45,7 @@ This is a Django application that allows users to add comments with optional ima
 4. **Create Docker container**:
    ```bash
     docker-compose up --build
-    docker run -p 5432:5432 postgres
+    docker start comments_project-db-1
     ```
 
 5. **Run migrations**:

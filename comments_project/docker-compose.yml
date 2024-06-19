@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: comments
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: 567234
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
       - "5432:5432"
 
@@ -20,4 +20,4 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://user:567234@db:5432/comments
+      - DATABASE_URL=postgres://user:mysecretpassword@db:5432/comments
